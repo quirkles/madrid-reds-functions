@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"verify-email","Source":"../../../terraform/modules/gcp-functions/http","Dir":"../../../terraform/modules/gcp-functions/http"}]}
