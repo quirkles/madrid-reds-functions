@@ -41,12 +41,13 @@ resource "google_cloudfunctions2_function" "function" {
   }
 }
 
-resource "google_cloudfunctions2_function_iam_member" "member" {
-  project = google_cloudfunctions2_function.function.project
+resource "google_cloud_run_service_iam_binding" "member" {
   location = google_cloudfunctions2_function.function.location
-  cloud_function = google_cloudfunctions2_function.function.name
-  role = "roles/cloudfunctions.invoker"
-  member = "allUsers"
+  service  = google_cloudfunctions2_function.function.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
 }
 
 output "function_uri" {
