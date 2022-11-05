@@ -21,7 +21,7 @@ module.exports = {
     verifyEmail: './functions/verifyEmail/main.ts'
   },
   output: {
-    filename: './functions/[name]/main.js',
+    filename: './functions/[name]/fn.js',
     path: path.join(__dirname)
   },
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder

@@ -25,4 +25,7 @@ module "verify-email" {
   env           = var.env
   project_id    = local.project_id_map[var.env]
   region        = "us-central1"
+  env_vars = {
+    VERIFY_EMAIL_SECRET: var.token_encryption_secret
+  }
 }
