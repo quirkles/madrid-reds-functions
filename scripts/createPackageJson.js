@@ -13,7 +13,7 @@ async function getFunctionNames() {
         return reject(err)
       }
       return resolve(results.reduce((functionNames, dirent) => {
-        if (dirent.isDirectory()) {
+        if (dirent.isDirectory() && dirent.name !== 'shared') {
           functionNames.push(dirent.name)
         }
         return functionNames
@@ -23,7 +23,7 @@ async function getFunctionNames() {
 }
 
 async function buildPackageJsonForFunction(functionName) {
-  const entryPoint = path.join(functionsDir, functionName, 'main.js')
+  const entryPoint = path.join(functionsDir, functionName, 'fn.js')
   if (!fs.existsSync(entryPoint)) {
     throw new Error(`Failed to find fn entry point at ${entryPoint} did you forget to build this function?`)
   }
