@@ -4,6 +4,7 @@ import {secretsProduction} from "./secrets.production";
 
 export interface Secrets {
     VERIFY_EMAIL_SECRET: string
+    GQL_URL: string
 }
 
 let secrets: Secrets

@@ -92,21 +92,27 @@ export async function startServer(serverConfig: ServerConfig): Promise<void> {
 
     app.use(httpHandlerRouter);
 
-    const pubSubEmulator = new PubSubEmulator({
-        port: pubsubPort,
-        killExistingProcessOnPort: true,
-    });
+    if(handlerConfigs.find(complement(isHttpHandlerConfig))) {
+        serverLogger.info('Hooking up pubsub emulator')
+        const pubSubEmulator = new PubSubEmulator({
+            port: pubsubPort,
+            killExistingProcessOnPort: true,
+        });
 
-    pubSubEmulator.on("emulatorChildProcessStderr", (msg) => {
-        emulatorLogger.error(msg);
-    });
-    pubSubEmulator.on("emulatorChildProcessStdout", (msg) => {
-        emulatorLogger.info(msg);
-    });
+        pubSubEmulator.on("emulatorChildProcessStderr", (msg) => {
+            emulatorLogger.error(msg);
+        });
+        pubSubEmulator.on("emulatorChildProcessStdout", (msg) => {
+            emulatorLogger.info(msg);
+        });
 
-    await pubSubEmulator.registerHandlers(
-        handlerConfigs.filter(complement(isHttpHandlerConfig))
-    );
+        await pubSubEmulator.registerHandlers(
+            handlerConfigs.filter(complement(isHttpHandlerConfig))
+        );
+    } else {
+        serverLogger.info('No pubsub handlers in configs, skipping pubsub emulator')
+    }
+
 
     app.listen(httpPort, () => {
         serverLogger.info(`Http server listening on port ${httpPort}`);

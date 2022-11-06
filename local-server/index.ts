@@ -3,7 +3,7 @@ import {verifyEmailHandler} from "../functions/verifyEmail/main";
 
 const serverConfig = {
   httpPort: 8080,
-  pubsubPort: 4040,
+  pubsubPort: 4488,
   handlerConfigs: [
     {
       method: "GET",
