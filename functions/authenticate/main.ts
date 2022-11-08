@@ -4,17 +4,17 @@ import { CryptoService } from "../shared/services/crypto";
 import { secrets } from "./secrets";
 import { createLogger } from "../shared/logger";
 
-const ValidateTokenMutation = gql`
-  mutation ValidateToken($emailAddress: String!, $secret: String!) {
-    verifyToken(emailAddress: $emailAddress, secret: $secret) {
-      wasVerificationSuccessful
+const AuthenticateMutation = gql`
+  mutation Authenticate($emailAddress: String!, $secret: String!) {
+    authenticateSignInToken(emailAddress: $emailAddress, secret: $secret) {
+      wasAuthenticationSuccessful
       jwt
-      verificationError
+      authenticationError
     }
   }
 `;
 
-export async function verifyEmailHandler(
+export async function authenticateHandler(
   req: Request,
   res: Response
 ): Promise<Response> {
@@ -24,15 +24,15 @@ export async function verifyEmailHandler(
     throw new Error("iv string query param required");
   }
 
-  const verificationToken = req.query.verificationToken;
-  if (!verificationToken || typeof verificationToken !== "string") {
-    throw new Error("verificationToken string query param required");
+  const authenticationToken = req.query.authenticationToken;
+  if (!authenticationToken || typeof authenticationToken !== "string") {
+    throw new Error("authenticationToken string query param required");
   }
 
-  const cryptoService = new CryptoService(secrets.VERIFY_EMAIL_SECRET);
+  const cryptoService = new CryptoService(secrets.AUTHENTICATE_SECRET);
 
   const decryptedToken = await cryptoService.decrypt({
-    encryptedInput: verificationToken,
+    encryptedInput: authenticationToken,
     initializationVector: Buffer.from(iv, "hex"),
   });
 
@@ -43,7 +43,7 @@ export async function verifyEmailHandler(
 
   const client = new GraphQLClient(secrets.GQL_URL);
 
-  const result = await client.request(ValidateTokenMutation, {
+  const result = await client.request(AuthenticateMutation, {
     emailAddress: email,
     secret,
   });

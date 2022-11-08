@@ -1,5 +1,6 @@
 import {HttpHandlerConfig, startServer} from "./server";
 import {verifyEmailHandler} from "../functions/verifyEmail/main";
+import {authenticateHandler} from "../functions/authenticate/main";
 
 const serverConfig = {
   httpPort: 8080,
@@ -9,6 +10,11 @@ const serverConfig = {
       method: "GET",
       path: '/verifyEmailHandler',
       handler: verifyEmailHandler,
+    } as HttpHandlerConfig,
+    {
+      method: "GET",
+      path: '/authenticateHandler',
+      handler: authenticateHandler,
     } as HttpHandlerConfig,
   ],
 };
